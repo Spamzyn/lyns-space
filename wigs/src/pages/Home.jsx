@@ -6,17 +6,15 @@ import { MyContext } from "../context/contextProvider";
 
 const Home = () => {
   const navigate = useNavigate();
-  const { setWigCat } = useContext(MyContext); // Change context variable name as needed
-
+  const { setWigCat } = useContext(MyContext);
   const [latestWigs, setLatestWigs] = useState([]);
 
   useEffect(() => {
     const fetchLatestWigs = async () => {
-      // Fetch your wig data instead of recipes
-      let response = await fetch("YOUR_API_ENDPOINT_FOR_WIGS"); // Replace with actual API endpoint
-      let data = await response.json();
+      const response = await fetch("YOUR_API_ENDPOINT_FOR_WIGS"); // Replace with actual API endpoint
+      const data = await response.json();
       if (data.wigs) {
-        setLatestWigs(data.wigs); // Adjust based on the API response structure
+        setLatestWigs(data.wigs);
       }
     };
     fetchLatestWigs();
@@ -82,15 +80,15 @@ const Home = () => {
             >
               <img
                 onClick={() => {
-                  setWigCat(wig.category); // Change context variable if necessary
+                  setWigCat(wig.category);
                   navigate(`/${wig.category}`);
                 }}
-                src={wig.image} // Adjust according to the API response
+                src={wig.image}
                 alt={wig.name}
                 className="w-full h-full object-cover rounded-md hover:scale-125 ease-in-out duration-300"
               />
               <h1 className="font-bold text-xl w-[80%] text-center">
-                {wig.nme} {/* Adjust according to the API response */}
+                {wig.name}
               </h1>
             </div>
           ))}
@@ -98,7 +96,7 @@ const Home = () => {
         <div className="flex justify-center mt-8">
           <button
             onClick={() => {
-              navigate("./wigs"); // Adjust the navigation path if necessary
+              navigate("./wigs");
             }}
             className="border-2 border-black py-3 px-10 rounded-md font-medium text-xl hover:bg-black hover:text-white"
           >

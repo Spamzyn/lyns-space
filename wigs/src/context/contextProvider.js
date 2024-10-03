@@ -1,7 +1,5 @@
-// src/Context/StoreContext.js
-
-import { createContext, useEffect, useState } from "react";
-import axios from "axios";
+import { createContext, useState, useEffect } from "react";
+import { getWigs } from "../data/wigs"; // Import the function to get local wig data
 
 // Create the StoreContext
 export const StoreContext = createContext();
@@ -23,24 +21,18 @@ export const StoreProvider = ({ children }) => {
   // State for filtered wigs based on search or filters
   const [filteredWigs, setFilteredWigs] = useState([]);
 
-  // Fetch all wigs (Replace with your actual API endpoint or use local data)
+  // Load wigs from local data
   useEffect(() => {
-    const fetchWigs = async () => {
-      try {
-        // Example using axios to fetch data from an API
-        const response = await axios.get("https://api.example.com/wigs"); // Replace with your API
-        setWigs(response.data.wigs);
-        setFilteredWigs(response.data.wigs); // Initialize filtered wigs
-      } catch (error) {
-        console.error("Error fetching wigs:", error);
-        // Optionally, set wigs from local data or handle the error
-      }
+    const loadWigs = () => {
+      const allWigs = getWigs();
+      setWigs(allWigs);
+      setFilteredWigs(allWigs); // Initialize filtered wigs
     };
 
-    fetchWigs();
+    loadWigs();
   }, []);
 
-  // Fetch wigs by selected category
+  // Filter wigs by selected category
   useEffect(() => {
     if (category === "") {
       setWigsByCategory(wigs);
@@ -55,14 +47,12 @@ export const StoreProvider = ({ children }) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === wig.id);
       if (existingItem) {
-        // If the wig is already in the cart, increase the quantity
         return prevCart.map((item) =>
           item.id === wig.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       } else {
-        // If the wig is not in the cart, add it with quantity 1
         return [...prevCart, { ...wig, quantity: 1 }];
       }
     });

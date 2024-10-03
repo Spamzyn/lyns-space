@@ -13,8 +13,8 @@ const Navbar = () => {
       <div className='p-2 flex sm:justify-center justify-between w-full'>
         <img
           onClick={() => navigate("/")}
-          src={assets.logo} // Replace with your Wig app logo path
-          alt="logo"
+          src={assets.logo} // Ensure this is your wig store logo
+          alt="Wig Store Logo"
           className='sm:w-[300px] w-[100px] cursor-pointer'
         />
         <CiMenuBurger
@@ -30,37 +30,37 @@ const Navbar = () => {
         } ${menu && 'flex flex-col absolute w-full top-12 p-5 gap-y-4 bg-white shadow-2xl rounded-md'}`}
       >
         <span
-          className='cursor-pointer text-xl hover:text-orange-600 font-serif'
+          className='cursor-pointer text-xl hover:text-purple-600 font-serif'
           onClick={() => navigate("/")}
         >
           Home
         </span>
         <span
-          className='cursor-pointer text-xl hover:text-orange-600 font-serif'
-          onClick={() => navigate("/recipes")}
+          className='cursor-pointer text-xl hover:text-purple-600 font-serif'
+          onClick={() => navigate("/wigtypes")}
         >
-          Wig Recipes
+          Wig Types
         </span>
         <span
-          className='cursor-pointer text-xl hover:text-orange-600 font-serif'
+          className='cursor-pointer text-xl hover:text-purple-600 font-serif'
           onClick={() => navigate("/styles")}
         >
           Wig Styles
         </span>
         <span
-          className='cursor-pointer text-xl hover:text-orange-600 font-serif'
-          onClick={() => navigate("/submit-recipe")}
+          className='cursor-pointer text-xl hover:text-purple-600 font-serif'
+          onClick={() => navigate("/care-guide")}
         >
-          Submit a Recipe
+          Care Guide
         </span>
         <span
-          className='cursor-pointer text-xl hover:text-orange-600 font-serif'
+          className='cursor-pointer text-xl hover:text-purple-600 font-serif'
           onClick={() => navigate("/about")}
         >
           About Us
         </span>
         <span
-          className='cursor-pointer text-xl hover:text-orange-600 font-serif'
+          className='cursor-pointer text-xl hover:text-purple-600 font-serif'
           onClick={() => navigate("/contact")}
         >
           Contact Us

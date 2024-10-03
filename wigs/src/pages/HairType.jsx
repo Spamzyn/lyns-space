@@ -6,33 +6,21 @@ import { MyContext } from "../context/contextProvider";
 import { FaRegCircle } from "react-icons/fa";
 
 const WigRecipe = () => {
-  const { wigInfo } = useContext(MyContext); // Assuming you have wig information in context
+  const { wigInfo } = useContext(MyContext);
   const { wigName } = useParams();
-  let tips = [];
-  let products = [];
 
   const wig = wigInfo.find((e) => e.strWig === wigName);
+  if (!wig) return <p>Wig not found.</p>; // Handle case if wig not found
 
-  let propertyName = Object.keys(wig);
+  const tips = Object.keys(wig)
+    .filter((key) => key.startsWith("strTip") && wig[key])
+    .map((key) => wig[key]);
 
-  let tipsStartWith = propertyName.filter(e => e.startsWith("strTip"));
-  let productsStartWith = propertyName.filter(e => e.startsWith("strProduct"));
+  const products = Object.keys(wig)
+    .filter((key) => key.startsWith("strProduct") && wig[key])
+    .map((key) => wig[key]);
 
-  // Get the care instructions for the wig
-  let instructions = wig["strCareInstructions"];
-  let steps = instructions.split(".").filter(e => e);
-
-  tipsStartWith.forEach(e => {
-    if (wig[e] !== " " && wig[e] !== "" && wig[e] !== null) {
-      tips.push(wig[e]);
-    }
-  });
-
-  productsStartWith.forEach(e => {
-    if (wig[e] !== " " && wig[e] !== "" && wig[e] !== null) {
-      products.push(wig[e]);
-    }
-  });
+  const instructions = wig.strCareInstructions.split(".").filter(Boolean);
 
   return (
     <div className="flex justify-center mt-5">
@@ -45,37 +33,40 @@ const WigRecipe = () => {
           </span>
           <span className="flex gap-x-2 items-center text-xl text-gray-400">
             <SlLocationPin className="text-xl text-orange-600" />
-            {wig.strOrigin} {/* Adjusted to fit wig context */}
+            {wig.strOrigin}
           </span>
         </div>
-        <p>
-          Here are some tips and care instructions to keep your wig looking fabulous!
-        </p>
+        <p>Here are some tips and care instructions to keep your wig looking fabulous!</p>
 
         <div className="w-full h-[20%]">
-          <img src={wig.strWigImage} alt="" className="w-full h-full rounded-2xl object-cover" />
+          <img
+            src={wig.strWigImage}
+            alt={wigName}
+            className="w-full h-full rounded-2xl object-cover"
+          />
         </div>
+
         {/* Tips / Instructions */}
         <div className="flex sm:flex-row flex-col justify-between">
           <div className="sm:w-[40%] pt-4 flex flex-col gap-y-5">
-            {/* Tips */}
             <h1 className="text-3xl font-bold font-mono">Care Tips</h1>
             <div className="flex flex-col gap-y-2">
-              {tips.map((e, i) => (
+              {tips.map((tip, i) => (
                 <span key={i} className="text-2xl flex items-center gap-x-3">
-                  <FaRegCircle className="flex-shrink-0 flex-grow-0" /> {e}
+                  <FaRegCircle className="flex-shrink-0" /> {tip}
                 </span>
               ))}
             </div>
           </div>
 
           <div className="sm:w-[55%] h-full pt-4 flex flex-col gap-y-5">
-            {/* Instructions */}
             <h1 className="text-3xl font-bold font-mono">Care Instructions</h1>
-            {steps.map((e, i) => (
+            {instructions.map((instruction, i) => (
               <div key={i} className="flex gap-x-4 items-center">
-                <div className="w-[30px] h-[30px] bg-red-300 flex-shrink-0 flex-grow-0 rounded-full flex items-center justify-center font-bold">{i + 1}</div>
-                <span className="text-2xl">{e}</span>
+                <div className="w-[30px] h-[30px] bg-red-300 rounded-full flex items-center justify-center font-bold">
+                  {i + 1}
+                </div>
+                <span className="text-2xl">{instruction}</span>
               </div>
             ))}
           </div>

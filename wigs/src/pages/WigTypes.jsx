@@ -1,30 +1,54 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { StoreContext } from '../context/contextProvider';
-import { useNavigate } from 'react-router-dom';
+import { assets } from '../assets';
 
-const CategoryWigs = () => {
+const WigTypes = () => {
   const navigate = useNavigate();
-  const { wigsByCategory } = useContext(StoreContext);
+  const { setWigCat } = useContext(StoreContext);
+  const [searchText, setSearchText] = useState("");
+
+  // Define your wig types here
+  const wigTypes = [
+    { name: "Bob Wigs", image: assets.bobWig },
+    { name: "Curly Wigs", image: assets.curlyWig },
+    { name: "Long Wigs", image: assets.longWig },
+    { name: "Pixie Wigs", image: assets.pixieWig },
+    // Add more wig types as needed
+  ];
+
+  const filteredWigTypes = wigTypes.filter(wigType =>
+    wigType.name.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
-    <div className="flex justify-center pt-5">
-      <div className="w-[90%] flex flex-wrap gap-x-4 justify-center pt-2 gap-y-4 ">
-        {wigsByCategory.map((wig, i) => (
+    <div className="mt-5 w-[80vw] mx-auto flex flex-col items-center gap-y-3">
+      <div className="w-full flex items-center mb-5">
+        <input
+          type="text"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          className="border border-gray-300 rounded-l-md py-2 px-4 w-[100%] focus:outline-none focus:ring-2 focus:ring-orange-400"
+          placeholder="Search for a wig type..."
+        />
+        <button className="bg-orange-600 text-white rounded-r-md px-4 py-2 hover:bg-orange-500">
+          Search
+        </button>
+      </div>
+
+      <h1 className="text-3xl font-bold mb-5">Popular Wig Types</h1>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {filteredWigTypes.map((wigType, i) => (
           <div
             key={i}
-            className="sm:w-[24%] w-100 flex flex-col items-center gap-y-3 cursor-pointer"
+            onClick={() => {
+              setWigCat(wigType.name);
+              navigate(`/wigs/${wigType.name.toLowerCase().replace(' ', '-')}`);
+            }}
+            className="bg-gray-100 rounded-md p-4 cursor-pointer hover:shadow-lg transition"
           >
-            <img
-              onClick={() => navigate(`/wigtypes/${wig.name}`)}
-              src={wig.image}
-              alt={wig.name}
-              className="w-full h-full object-cover rounded-md hover:scale-105 ease-in-out duration-300"
-            />
-            <div className="h-[10%]">
-              <h1 className="font-bold w-[80%] text-center">
-                {wig.name}
-              </h1>
-            </div>
+            <img src={wigType.image} alt={wigType.name} className="w-full h-40 object-cover rounded-md mb-2" />
+            <h2 className="font-semibold text-xl">{wigType.name}</h2>
           </div>
         ))}
       </div>
@@ -32,4 +56,4 @@ const CategoryWigs = () => {
   );
 };
 
-export default CategoryWigs;
+export default WigTypes;

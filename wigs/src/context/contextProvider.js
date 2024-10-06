@@ -1,38 +1,24 @@
-import { createContext, useState, useEffect } from "react";
-import { getWigs } from "../data/wigs"; // Import the function to get local wig data
+import React, { createContext, useState, useEffect, useCallback } from "react";
+import { getWigs } from "../data/wigs";
 
-// Create the StoreContext
 export const StoreContext = createContext();
 
-// StoreProvider component to wrap around the app
 export const StoreProvider = ({ children }) => {
-  // State to store all wigs
   const [wigs, setWigs] = useState([]);
-
-  // State to store selected category
   const [category, setCategory] = useState("");
-
-  // State to store wigs filtered by category
   const [wigsByCategory, setWigsByCategory] = useState([]);
-
-  // State for the shopping cart
   const [cart, setCart] = useState([]);
-
-  // State for filtered wigs based on search or filters
   const [filteredWigs, setFilteredWigs] = useState([]);
 
-  // Load wigs from local data
   useEffect(() => {
     const loadWigs = () => {
       const allWigs = getWigs();
       setWigs(allWigs);
-      setFilteredWigs(allWigs); // Initialize filtered wigs
+      setFilteredWigs(allWigs);
     };
-
     loadWigs();
   }, []);
 
-  // Filter wigs by selected category
   useEffect(() => {
     if (category === "") {
       setWigsByCategory(wigs);
@@ -42,8 +28,7 @@ export const StoreProvider = ({ children }) => {
     }
   }, [category, wigs]);
 
-  // Function to add a wig to the cart
-  const addToCart = (wig) => {
+  const addToCart = useCallback((wig) => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((item) => item.id === wig.id);
       if (existingItem) {
@@ -56,32 +41,26 @@ export const StoreProvider = ({ children }) => {
         return [...prevCart, { ...wig, quantity: 1 }];
       }
     });
-  };
+  }, []);
 
-  // Function to remove a wig from the cart
-  const removeFromCart = (wigId) => {
-    setCart((prevCart) =>
-      prevCart.filter((item) => item.id !== wigId)
-    );
-  };
+  const removeFromCart = useCallback((wigId) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== wigId));
+  }, []);
 
-  // Function to update wig quantity in the cart
-  const updateCartQuantity = (wigId, quantity) => {
+  const updateCartQuantity = useCallback((wigId, quantity) => {
     setCart((prevCart) =>
       prevCart.map((item) =>
         item.id === wigId ? { ...item, quantity } : item
       )
     );
-  };
+  }, []);
 
-  // Calculate total price
   const total = cart.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
 
-  // Function to handle search
-  const handleSearch = (searchTerm) => {
+  const handleSearch = useCallback((searchTerm) => {
     if (searchTerm === "") {
       setFilteredWigs(wigs);
     } else {
@@ -90,35 +69,24 @@ export const StoreProvider = ({ children }) => {
       );
       setFilteredWigs(filtered);
     }
-  };
+  }, [wigs]);
 
-  // Function to handle filters (e.g., price range, material)
-  const handleFilters = (filters) => {
+  const handleFilters = useCallback((filters) => {
     let filtered = wigs;
-
     if (filters.category) {
-      filtered = filtered.filter(
-        (wig) => wig.category === filters.category
-      );
+      filtered = filtered.filter((wig) => wig.category === filters.category);
     }
-
     if (filters.minPrice !== undefined && filters.maxPrice !== undefined) {
       filtered = filtered.filter(
-        (wig) =>
-          wig.price >= filters.minPrice && wig.price <= filters.maxPrice
+        (wig) => wig.price >= filters.minPrice && wig.price <= filters.maxPrice
       );
     }
-
     if (filters.material) {
-      filtered = filtered.filter(
-        (wig) => wig.material === filters.material
-      );
+      filtered = filtered.filter((wig) => wig.material === filters.material);
     }
-
     setFilteredWigs(filtered);
-  };
+  }, [wigs]);
 
-  // Context value to be provided to consuming components
   const contextValue = {
     wigs,
     setWigs,

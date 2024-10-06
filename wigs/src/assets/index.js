@@ -1,27 +1,20 @@
-// src/assets/index.js
-
-// Importing existing images
-import logo from './brand4.jpeg'; // Updated logo import
-import heroImg from './menu1.jpg';
-import aboutImg from './menu150.jpg';
-import contactImg from './menu113.jpg';
-
-// Importing wig images
+import brand4 from './brand4.jpeg';
 import wig1 from './wig1.jpeg';
 import wig2 from './wig2.jpeg';
 import wig3 from './wig3.jpeg';
 import wig4 from './wig4.jpeg';
 
-// Exporting assets
+// Assuming you have a logo file, if not, you can remove this line
+import logo from './logo.jpeg'; // Replace with the correct file name and extension
+
+// Add any other assets you're using in your components
+
 export const assets = {
-    logo,          // Logo image
-    heroImg,       // Hero section image
-    aboutImg,      // About Us section image
-    contactImg,    // Contact Us section image
-    wigs: {        // Wig images grouped under 'wigs'
-        wig1,
-        wig2,
-        wig3,
-        wig4,
-    },
+  brand4,
+  wig1,
+  wig2,
+  wig3,
+  wig4,
+  logo, // Remove this if you don't have a logo file
+  // Add any other assets here
 };

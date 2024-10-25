@@ -1,20 +1,92 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { assets } from '../assets';
+import { CiMenuBurger } from "react-icons/ci";
+
+const Navbar = () => {
+  const navigate = useNavigate();
+  const [menu, setMenu] = useState(false);
+
+  return (
+    <div className='flex sm:flex-col gap-y-10 items-center justify-between relative z-[999]'>
+      {/* Logo and Menu Burger */}
+      <div className='p-2 flex sm:justify-center justify-between w-full'>
+        <img
+          onClick={() => navigate("/")}
+          src={assets.logo} // Ensure this is your wig store logo
+          alt="Wig Store Logo"
+          className='sm:w-[300px] w-[100px] cursor-pointer'
+        />
+        <CiMenuBurger
+          onClick={() => setMenu(!menu)}
+          className='sm:hidden text-2xl cursor-pointer'
+        />
+      </div>
+
+      {/* Navigation Links */}
+      <div
+        className={`links sm:flex align-center justify-center gap-x-10 ${
+          !menu && 'hidden'
+        } ${menu && 'flex flex-col absolute w-full top-12 p-5 gap-y-4 bg-white shadow-2xl rounded-md'}`}
+      >
+        <span
+          className='cursor-pointer text-xl hover:text-purple-600 font-serif'
+          onClick={() => navigate("/")}
+        >
+          Home
+        </span>
+        <span
+          className='cursor-pointer text-xl hover:text-purple-600 font-serif'
+          onClick={() => navigate("/wigtypes")}
+        >
+          Wig Types
+        </span>
+        <span
+          className='cursor-pointer text-xl hover:text-purple-600 font-serif'
+          onClick={() => navigate("/styles")}
+        >
+          Wig Styles
+        </span>
+        <span
+          className='cursor-pointer text-xl hover:text-purple-600 font-serif'
+          onClick={() => navigate("/care-guide")}
+        >
+          Care Guide
+        </span>
+        <span
+          className='cursor-pointer text-xl hover:text-purple-600 font-serif'
+          onClick={() => navigate("/about")}
+        >
+          About Us
+        </span>
+        <span
+          className='cursor-pointer text-xl hover:text-purple-600 font-serif'
+          onClick={() => navigate("/contact")}
+        >
+          Contact Us
+        </span>
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;
+adamas@OSEI:~/lyns-space$ cat wigs/src/pages/Home.jsx
 import React, { useContext } from "react";
 import { assets } from '../assets';
-import { GoArrowRight } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import { StoreContext } from '../context/contextProvider';
 
 const Home = () => {
   const navigate = useNavigate();
-  const { setWigCat } = useContext(StoreContext);
+  const { setCategory } = useContext(StoreContext);
 
   // Define your wig categories here
   const wigCategories = [
-    { name: "Synthetic Wigs", image: assets.syntheticWig },
-    { name: "Human Hair Wigs", image: assets.humanHairWig },
-    { name: "Lace Front Wigs", image: assets.laceFrontWig },
-    { name: "Full Lace Wigs", image: assets.fullLaceWig },
-    // Add more categories as needed
+    { name: "Synthetic Wigs", image: assets.wig1 },
+    { name: "Human Hair Wigs", image: assets.wig2 },
+    { name: "Lace Front Wigs", image: assets.wig3 },
+    { name: "Full Lace Wigs", image: assets.wig4 },
   ];
 
   return (
@@ -23,12 +95,11 @@ const Home = () => {
       <div className="w-[80vw] mx-auto mt-5 sm:h-[60vh] sm:flex">
         <div className="sm:w-[60%] w-[100%] h-full">
           <img
-            src={assets.heroImg}
+            src={assets.wig1}
             alt="Wigs"
             className="w-full h-full rounded-s-md sm:object-cover"
           />
         </div>
-
         {/* ... rest of the hero section ... */}
       </div>
 
@@ -45,8 +116,8 @@ const Home = () => {
             >
               <img
                 onClick={() => {
-                  setWigCat(wig.name);
-                  navigate(`/${wig.name.toLowerCase().replace(' ', '-')}`);
+                  setCategory(wig.name);
+                  navigate(`/wigtypes/${wig.name.toLowerCase().replace(' ', '-')}`);
                 }}
                 src={wig.image}
                 alt={wig.name}
@@ -60,7 +131,7 @@ const Home = () => {
         </div>
         <div className="flex justify-center mt-8">
           <button
-            onClick={() => navigate("/wigs")}
+            onClick={() => navigate("/wigtypes")}
             className="border-2 border-black py-3 px-10 rounded-md font-medium text-xl hover:bg-black hover:text-white"
           >
             View All Wigs

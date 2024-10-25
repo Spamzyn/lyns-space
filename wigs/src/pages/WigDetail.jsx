@@ -2,23 +2,24 @@ import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { TbCategoryPlus } from "react-icons/tb";
 import { SlLocationPin } from "react-icons/sl";
-import { MyContext } from "../context/contextProvider";
 import { FaRegCircle } from "react-icons/fa";
+import { StoreContext } from '../context/contextProvider';
 
-const WigRecipe = () => {
-  const { wigInfo } = useContext(MyContext);
+const WigDetail = () => {
+  const { wigs } = useContext(StoreContext);
   const { wigName } = useParams();
 
-  const wig = wigInfo.find((e) => e.strWig === wigName);
-  if (!wig) return <p>Wig not found.</p>; // Handle case if wig not found
+  const wig = wigs.find((w) => w.name === wigName);
+  if (!wig) return <p>Wig not found.</p>;
 
   const tips = Object.keys(wig)
     .filter((key) => key.startsWith("strTip") && wig[key])
     .map((key) => wig[key]);
 
-  const products = Object.keys(wig)
-    .filter((key) => key.startsWith("strProduct") && wig[key])
-    .map((key) => wig[key]);
+  // Commented out the unused 'products' variable
+  // const products = Object.keys(wig)
+  //   .filter((key) => key.startsWith("strProduct") && wig[key])
+  //   .map((key) => wig[key]);
 
   const instructions = wig.strCareInstructions.split(".").filter(Boolean);
 
@@ -76,4 +77,4 @@ const WigRecipe = () => {
   );
 };
 
-export default WigRecipe;
+export default WigDetail;

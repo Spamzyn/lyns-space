@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { IoKeyOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { MyContext } from "../context/contextProvider";
+import { StoreContext } from '../context/contextProvider';
 
 const WigTypes = () => {
   const navigate = useNavigate();

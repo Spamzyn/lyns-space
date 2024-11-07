@@ -1,55 +1,77 @@
-import React, { useContext, useState, useEffect } from "react";
-import { IoKeyOutline } from "react-icons/io5";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { StoreContext } from '../context/contextProvider';
 
-const WigTypes = () => {
+const WigStyles = () => {
   const navigate = useNavigate();
-  const { wigBrands, setWigBrands } = useContext(MyContext);
+  const { wigs, setCategory } = useContext(StoreContext);
   const [searchText, setSearchText] = useState("");
 
-  useEffect(() => {
-    const fetchWigBrands = async () => {
-      const response = await fetch("YOUR_API_ENDPOINT_FOR_BRANDS"); // Replace with actual API endpoint
-      const data = await response.json();
-      setWigBrands(data.brands); // Adjust based on actual response structure
-    };
-    fetchWigBrands();
-  }, [setWigBrands]);
+  // Group wigs by style/category
+  const wigStyles = [
+    ...new Set(wigs.map(wig => wig.category))
+  ].sort();
+
+  const filteredStyles = wigStyles.filter(style =>
+    style.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <div className="mt-5 w-[80vw] mx-auto flex flex-col items-center gap-y-3">
+      {/* Search Bar */}
       <div className="w-full flex items-center mb-5">
         <input
           type="text"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
-          className="border border-gray-300 rounded-l-md py-2 px-4 w-[100%] focus:outline-none focus:ring-2 focus:ring-orange-400"
-          placeholder="Search for a wig type..."
+          className="border border-gray-300 rounded-l-md py-2 px-4 w-[100%] focus:outline-none focus:ring-2 focus:ring-purple-400"
+          placeholder="Search for a wig style..."
         />
-        <button className="bg-orange-600 text-white rounded-r-md px-4 py-2 hover:bg-orange-500">
+        <button className="bg-purple-600 text-white rounded-r-md px-4 py-2 hover:bg-purple-500">
           Search
         </button>
       </div>
 
-      <h1 className="text-3xl font-bold mb-5">Popular Wig Types</h1>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {wigBrands
-          .filter((brand) =>
-            brand.name.toLowerCase().includes(searchText.toLowerCase())
-          )
-          .map((brand, i) => (
+      <h1 className="text-3xl font-bold mb-5">Wig Styles Collection</h1>
+
+      {/* Style Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
+        {filteredStyles.map((style, index) => {
+          const wigInStyle = wigs.find(wig => wig.category === style);
+          return (
             <div
-              key={i}
-              onClick={() => navigate(`/wigs/${brand.name}`)}
-              className="bg-gray-100 rounded-md p-4 cursor-pointer hover:shadow-lg transition"
+              key={index}
+              onClick={() => {
+                setCategory(style);
+                navigate(`/wigtypes/${style.toLowerCase().replace(' ', '-')}`);
+              }}
+              className="bg-white shadow-lg rounded-md overflow-hidden cursor-pointer hover:shadow-xl transition duration-300"
             >
-              <h2 className="font-semibold text-xl">{brand.name}</h2>
+              {wigInStyle && (
+                <img
+                  src={wigInStyle.image}
+                  alt={style}
+                  className="w-full h-48 object-cover"
+                />
+              )}
+              <div className="p-4">
+                <h2 className="font-semibold text-xl text-center">{style}</h2>
+                <p className="text-gray-600 text-sm text-center mt-2">
+                  {wigs.filter(wig => wig.category === style).length} wigs available
+                </p>
+              </div>
             </div>
-          ))}
+          )}
+        )}
       </div>
+
+      {filteredStyles.length === 0 && (
+        <div className="text-center py-8">
+          <p className="text-gray-600 text-lg">No styles found matching your search.</p>
+        </div>
+      )}
     </div>
   );
 };
 
-export default WigTypes;
+export default WigStyles;

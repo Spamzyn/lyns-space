@@ -44,9 +44,10 @@ const WigTypes = () => {
           <div
             key={i}
             onClick={() => {
-              setCategory(wigType.name);
-              navigate(`/wigtypes/${wigType.name.toLowerCase().replace(' ', '-')}`);
-            }}
+  		setCategory(wigType.name);
+  		navigate(`/wigtypes/${wigType.name.toLowerCase().replace(/ /g, '-')}`);
+  // Note the change from .replace(' ', '-') to .replace(/ /g, '-') to replace all spaces
+	    }}
             className="bg-white shadow-lg rounded-md p-4 cursor-pointer hover:shadow-xl transition duration-300"
           >
             <img src={wigType.image} alt={wigType.name} className="w-full h-40 object-cover rounded-md mb-2" />
